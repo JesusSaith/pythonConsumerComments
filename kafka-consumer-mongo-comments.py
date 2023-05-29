@@ -55,3 +55,26 @@ for msg in consumer:
     except Exception as e:
         print("Could not insert into MongoDB")
         print(e)
+
+    # Create bdnosql_sumary and insert groups into mongodb
+    try:
+        agg_result = db.tkdapp_comments.aggregate([
+        {
+            "$group": {
+                "_id": {
+                    'objectid': '$objectid',
+                    'message': '$message'
+                },
+                "n": {"$sum": 1}
+            }
+        }
+    ])
+        db.tkdapp_comments_sumary.delete_many({})
+        for i in agg_result:
+            print(i)
+            sumary_id = db.tkdapp_comments_sumary.insert_one(i)
+            print("Sumary Reactions inserted with record ids: ", sumary_id)
+            
+    except Exception as e:
+        print(f'group vy cought {type(e)}: ')
+        print(e)
