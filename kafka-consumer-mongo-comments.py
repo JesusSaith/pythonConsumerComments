@@ -33,22 +33,22 @@ try:
 except:
     print("Could not connect to MongoDB Aquiii")
 
-consumer = KafkaConsumer('reaction',bootstrap_servers=['my-kafka-0.my-kafka-headless.btoarriola.svc.cluster.local:9092'])
+consumer = KafkaConsumer('comment',bootstrap_servers=['my-kafka-0.my-kafka-headless.btoarriola.svc.cluster.local:9092'])
 # Parse received data from Kafka
 for msg in consumer:
     record = json.loads(msg.value)
     print(record)
     userid = record['userid']
     objectid = record['objectid']
-    reactionid = record['reactionid']
+    message = record['message']
     print("hola :)")
 
 
     # Create dictionary and ingest data into MongoDB
     try:
-        tkdapp_rec = {'userid': userid, 'objectid': objectid, 'reactionid': reactionid}
+        tkdapp_rec = {'userid': userid, 'objectid': objectid, 'message': message}
         print(tkdapp_rec)
-        tkdapp_id = db.tkdapp_reactions.insert_one(tkdapp_rec)
+        tkdapp_id = db.tkdapp_comments.insert_one(tkdapp_rec)
         print("Data inserted with record ids", tkdapp_id)
 
         subprocess.call(['sh', './test.sh'])
