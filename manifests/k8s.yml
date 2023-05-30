@@ -13,7 +13,7 @@ spec:
         app: kafka-consumer-comments
     spec:
       containers:
-      - image: docker.io/btoarriola/kafka-consumer-comments:{github.sha}
+      - image: docker.io/{docker_user}/{model_name}:{github.sha}
         name: kafka-consumer-comments
 #        envFrom:
 #        - configMapRef:
